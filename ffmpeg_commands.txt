@@ -1,0 +1,1 @@
+ffmpeg -i elasticCollision.avi -c:v libx264 -crf 20 -vf "scale=iw:ih+1,fps=fps=60" elasticCollision(Full-1_1000).mp4
