@@ -58,19 +58,19 @@ classdef PoolBall < handle
             vel_angle = atan2(obj.vel(2), obj.vel(1));
             old_vel = norm(obj.vel); % Get the normal of the old velocity
             new_vel = old_vel - (time_slice * PoolBall.mu_bs * PoolBall.gravity); % Loss of velocity from friction
-            if (new_vel < 0) 
-                new_vel = 0; % Check if the new velocity was reduced past 0
+            if (new_vel < 0) % Check if the new velocity was reduced past 0
+                new_vel = 0;
             end
-            effective_vel = [cos(vel_angle) * (old_vel + new_vel)/2, sin(vel_angle) * (old_vel + new_vel)/2];
-            obj.vel = [cos(vel_angle) * new_vel, sin(vel_angle) * new_vel];
+            effective_vel = [cos(vel_angle) * (old_vel + new_vel)/2, sin(vel_angle) * (old_vel + new_vel)/2]; % Use velocity of average between old and new for time section
+            obj.vel = [cos(vel_angle) * new_vel, sin(vel_angle) * new_vel]; % Update objects velocity
             obj.pos = obj.pos + effective_vel * time_slice; % Update the objects position
         end
         %% PoolBall Wall Collisions
         % Compute velocity changes due to wall/cushion/bumper collisions
         function compute_wall_collisions(obj)
-            % Check if we collided with the x=max or x=0 "bumpers"
             max_x = PoolBall.table_length;
             max_y = PoolBall.table_width;
+            % Check if we collided with the x=max or x=0 "bumpers"
             if(obj.pos(1) > (max_x - obj.rad) || obj.pos(1) < obj.rad)
                 old_vel = obj.vel; % Hold the original velocity for comparison
                 obj.vel(1) = -(obj.vel(1)*PoolBall.e_bc); % Invert and reduce the perpendicular velocity by restitution factor
@@ -82,11 +82,11 @@ classdef PoolBall < handle
             end
             % Check if we collided with the y=max or y=0 "bumpers"
             if(obj.pos(2) > (max_y - obj.rad) || obj.pos(2) < obj.rad)
-                old_vel = obj.vel;  % Solve for frictional loss to parallel velocity
-                obj.vel(2) = -(obj.vel(2)*PoolBall.e_bc);  % Solve for frictional loss to parallel velocity
-                obj.pos(2) = min(max(obj.pos(2),obj.rad),max_y-obj.rad);  % Solve for frictional loss to parallel velocity
-                obj.vel(1) = obj.vel(1) - sign(obj.vel(1))*(PoolBall.mu_bc * abs(obj.vel(2)-old_vel(2)));  % Solve for frictional loss to parallel velocity
-                if (sign(obj.vel(1)) ~= sign(old_vel(1)))  % Solve for frictional loss to parallel velocity
+                old_vel = obj.vel; % Hold the original velocity for comparison
+                obj.vel(2) = -(obj.vel(2)*PoolBall.e_bc); % Invert and reduce the perpendicular velocity by restitution factor
+                obj.pos(2) = min(max(obj.pos(2),obj.rad),max_y-obj.rad); % Put the ball back within the limits (Eliminate glitches)
+                obj.vel(1) = obj.vel(1) - sign(obj.vel(1))*(PoolBall.mu_bc * abs(obj.vel(2)-old_vel(2))); % Solve for frictional loss to parallel velocity
+                if (sign(obj.vel(1)) ~= sign(old_vel(1))) % Ensure we didnt reverse direction due to friction
                     obj.vel(1) = 0;
                 end
             end
@@ -99,8 +99,8 @@ classdef PoolBall < handle
                 % Check if we are still colliding with this ball
                 %   Approximation method needed for time-slice based approach.
                 %   This avoids calculating multiple collisions while balls are
-                %   clipped through eachother. Decreased time-slice reduces approximation
-                %   error here.
+                %   clipped through eachother. Smaller time-slice sizes reduces
+                %   approximation error here.
                 if (~isempty(ball_a.colliding_balls))
                     for i=1: length(ball_a.colliding_balls)
                         if (isequal(ball_b, ball_a.colliding_balls(i)))
@@ -112,11 +112,11 @@ classdef PoolBall < handle
                 ball_a.colliding_balls(end+1) = ball_b;
                 % Check if either ball is the cue ball, select the correct e
                 if (ball_a.is_cue || ball_b.is_cue)
-                    e = PoolBall.e_bc;
+                    e = PoolBall.e_bc; % Coefficient for cue and numbered ball
                 else
-                    e = PoolBall.e_nn;
+                    e = PoolBall.e_nn; % Coefficient for 2 numbered balls
                 end
-                % Get the angles velocities, relative to the impact
+                % Get the angles and velocities, relative to the impact
                 difference = ball_b.pos - ball_a.pos;
                 impact_angle = atan2(difference(2), difference(1));
                 ball_a_v = norm(ball_a.vel); % Absolute velocity of A
@@ -132,7 +132,7 @@ classdef PoolBall < handle
                 norm_momentum = ball_a_norm_v * ball_a.mass + ball_b_norm_v * ball_b.mass == new_ball_a_norm_v * ball_a.mass + new_ball_b_norm_v * ball_b.mass;
                 norm_restitution = e == (new_ball_a_norm_v - new_ball_b_norm_v)/(ball_b_norm_v - ball_a_norm_v);
                 [A,B] = equationsToMatrix([norm_momentum, norm_restitution], [new_ball_a_norm_v, new_ball_b_norm_v]);
-                X = linsolve(A,B);
+                X = linsolve(A,B); % Solve system
                 new_ball_a_norm_v = X(1); % Post-impact normal velocity of A
                 new_ball_b_norm_v = X(2); % Post-impact normal velocity of B
                 % Determine frictional losses on tangent velocities
@@ -151,10 +151,10 @@ classdef PoolBall < handle
                 ball_b.vel = [double(cos(impact_angle)*new_ball_b_norm_v - cos(pi/2 - impact_angle)*new_ball_b_tan_v), ...
                               double(sin(impact_angle)*new_ball_b_norm_v + sin(pi/2 - impact_angle)*new_ball_b_tan_v)];
                 return;
-            % Check if we finished colliding with this ball
-            elseif (~isempty(ball_a.colliding_balls))
+            % If this ball isnt overlapping, Check if we were previously colliding with it
+            elseif (~isempty(ball_a.colliding_balls)) % Make sure array isnt empty
                 for i=1: length(ball_a.colliding_balls)
-                    if (isequal(ball_b, ball_a.colliding_balls(i)))
+                    if (isequal(ball_b, ball_a.colliding_balls(i))) % Compare object references
                         ball_a.colliding_balls(i) = []; % Delete the ball reference
                     end
                 end
@@ -178,20 +178,20 @@ classdef PoolBall < handle
             obj.draw();
         end
         %% PoolBall Set Velocity
-        % Set the velocity of the pool ball (Clear than value accessor)
+        % Set the velocity of the pool ball (Clearer than value accessor)
         function set_vel(obj, vel)
             obj.vel = vel;
         end
         %% PoolBall Find Closest
-        % Determine the closest ball from a given list of ball
+        % Determine the closest ball from a given list of ball (Returns ball reference)
         function closest = find_nearest(obj, balls)
-            closest = PoolBall.empty;
-            min_dist = norm([PoolBall.table_length, PoolBall.table_width]);
+            closest = PoolBall.empty; % Empty reference
+            min_dist = norm([PoolBall.table_length, PoolBall.table_width]); % Set to max value
             for i=1: length(balls)
                 distance = norm(balls(i).pos - obj.pos);
-                if (distance < min_dist)
-                    min_dist = distance;
-                    closest = balls(i);
+                if (distance < min_dist) % Check if this ball is closer
+                    min_dist = distance; % Update the minimum distance
+                    closest = balls(i); % Update the object reference
                 end
             end
         end

@@ -7,6 +7,7 @@
 
 
 \title{
+    % UW Mech/Tron Eng Logo
     \includegraphics[width=\linewidth]{resources/uwaterloo_mechanical_and_mechatronics_engineering/UWaterloo_Mechanical_and_Mechatronics_Engineering/PNG/UWaterloo_Mechanical_Mechatronics_Eng_Logo_horiz_rgb.png}
     \\[1cm]
     \underline{\bf{ME 212 Billards Project Report}}
@@ -20,6 +21,18 @@
 
 \begin{document}
 \maketitle
+\vfill
+\begin{abstract}
+    Project report for ME 212 in Spring 2021. Using MatLab to simulation collisions of pool balls 
+    with friction and restitution.
+\end{abstract}
+\newpage
+
+\tableofcontents
+\listoftables
+\listoffigures
+\lstlistoflistings
+
 \newpage
 
 % \begin{abstract}
@@ -28,11 +41,21 @@
 
 \section{Problem 1}
 \subsection{Show Transformation}
-Since we got equation 1 back, equation 2 is just equation 1 with $z$ substituted in.
+Since we got equation 1 back, equation 2 is just equation 1 with $z$ substituted in. I 
+want to then reference Table \ref{start_pos} as an example.
+
+\centering{
+    \captionof{table}{Starting Positions}\label{start_pos}
+    \begin{tabular}{l|r|r}
+        \bfseries Ball \# & \bfseries X pos & \bfseries Y pos
+        \csvreader[head to column names]{project_information/Initial_Positions.csv}{}
+        {\\\hline \Ball & \x & \y}
+    \end{tabular}
+}
 
 \begin{table}
-    \captionof{table}{Simulation Snapshots}
     \centering
+    \captionof{table}{Simulation Snapshots}\label{sim_snaps}
     \begin{tabu}to \textwidth {X[c]X[c]}
       \includegraphics[width=75mm]{out/matlab/images/Simulation_1_start.png}\captionof{figure}{Simulation 1 Start}
      &\includegraphics[width=75mm]{out/matlab/images/Simulation_1_end.png}\captionof{figure}{Simulation 1 End} \\
@@ -47,13 +70,13 @@ Since we got equation 1 back, equation 2 is just equation 1 with $z$ substituted
 
 
 \pagebreak
-\VerbatimInput[ label=\fbox{\color{black}output.log}]{./out/matlab/output.log}
+\lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log ]{./out/matlab/output.log}
 
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m} ]{./BilliardsCode.m}
+\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script | BilliardsCode.m ]{./BilliardsCode.m}
 
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m} ]{./PoolBall.m}
+\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class Definition | PoolBall.m ]{./PoolBall.m}
 
 
 % \bibliographystyle{abbrv}
