@@ -36,6 +36,21 @@
             "problemMatcher": []
         },
         {
+            "label": "Report: Generate Example Gif",
+            "type": "shell",
+            "command": "ffmpeg",
+            "args": [
+                "-i",
+                "out/matlab/videos/elasticCollision.avi",
+                "-vf",
+                "'fps=30,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse'",
+                "-loop", "0",
+                "resources/example_collisions.gif",
+                "-y"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "Report: Build Latex",
             "type": "shell",
             "command": "latexmk",
@@ -50,11 +65,24 @@
             "problemMatcher": []
         },
         {
+            "label": "Report: GPG Sign Report",
+            "type": "shell",
+            "command": "gpg",
+            "args": [
+                "--clearsign",
+                "--output=out/latex/Project_Report_signed.pdf",
+                "--not-dash-escaped",
+                "out/latex/Project_Report.pdf"
+            ],
+            "problemMatcher": []
+        },
+        {
             "label": "Report: Compile Full",
             "dependsOn": [
                 "Report: Run Simulation",
                 "Report: Optimize Video",
-                "Report: Build Latex"
+                "Report: Build Latex",
+                "Report: GPG Sign PDF"
             ],
             "dependsOrder": "sequence",
             "problemMatcher": []
