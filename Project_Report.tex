@@ -1,0 +1,62 @@
+
+\documentclass[12pt]{article}
+\usepackage[a4paper, total={6.5in, 9in}]{geometry}
+\usepackage{import}
+
+\import{./}{macros}
+
+
+\title{
+    \includegraphics[width=\linewidth]{resources/uwaterloo_mechanical_and_mechatronics_engineering/UWaterloo_Mechanical_and_Mechatronics_Engineering/PNG/UWaterloo_Mechanical_Mechatronics_Eng_Logo_horiz_rgb.png}
+    \\[1cm]
+    \underline{\bf{ME 212 Billards Project Report}}
+}
+\author{
+    Alex Roman\\
+    Austin W. Milne
+}
+\date{July 8, 2021}
+
+
+\begin{document}
+\maketitle
+\newpage
+
+% \begin{abstract}
+% Report 
+% \end{abstract}
+
+\section{Problem 1}
+\subsection{Show Transformation}
+Since we got equation 1 back, equation 2 is just equation 1 with $z$ substituted in.
+
+\begin{table}
+    \captionof{table}{Simulation Snapshots}
+    \centering
+    \begin{tabu}to \textwidth {X[c]X[c]}
+      \includegraphics[width=75mm]{out/matlab/images/Simulation_1_start.png}\captionof{figure}{Simulation 1 Start}
+     &\includegraphics[width=75mm]{out/matlab/images/Simulation_1_end.png}\captionof{figure}{Simulation 1 End} \\
+      \includegraphics[width=75mm]{out/matlab/images/Simulation_2_start.png}\captionof{figure}{Simulation 2 Start}
+     &\includegraphics[width=75mm]{out/matlab/images/Simulation_2_end.png}\captionof{figure}{Simulation 2 End} \\
+      \includegraphics[width=75mm]{out/matlab/images/Simulation_3_start.png}\captionof{figure}{Simulation 3 Start}
+     &\includegraphics[width=75mm]{out/matlab/images/Simulation_3_end.png}\captionof{figure}{Simulation 3 End} \\
+      \includegraphics[width=75mm]{out/matlab/images/Simulation_4_start.png}\captionof{figure}{Simulation 4 Start}
+     &\includegraphics[width=75mm]{out/matlab/images/Simulation_4_end.png}\captionof{figure}{Simulation 4 End} \\
+    \end{tabu}
+\end{table}
+
+
+\pagebreak
+\VerbatimInput[ label=\fbox{\color{black}output.log}]{./out/matlab/output.log}
+
+\pagebreak
+\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m} ]{./BilliardsCode.m}
+
+\pagebreak
+\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m} ]{./PoolBall.m}
+
+
+% \bibliographystyle{abbrv}
+% \bibliography{main}
+
+\end{document}

@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Run Program",
+            "label": "Report: Run Simulation",
             "type": "shell",
             "command": "matlab",
             "args": [
@@ -13,8 +13,50 @@
                 "-nosplash",
                 "-nodesktop",
                 "-r",
-                "Billiards_Code",
+                "'BilliardsCode;exit'"
             ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Report: Optimize Video",
+            "type": "shell",
+            "command": "ffmpeg",
+            "args": [
+                "-i",
+                "out/matlab/videos/elasticCollision.avi",
+                "-c:v",
+                "libx264",
+                "-crf",
+                "20",
+                "-vf",
+                "\"scale=iw:ih,fps=fps=60\"",
+                "out/matlab/videos/elasticCollision_optimized.avi",
+                "-y"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Report: Build Latex",
+            "type": "shell",
+            "command": "latexmk",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "-outdir=out/latex",
+                "./Project_Report.tex"
+            ],
+            "problemMatcher": []
+        },
+        {
+            "label": "Report: Compile Full",
+            "dependsOn": [
+                "Report: Run Simulation",
+                "Report: Optimize Video",
+                "Report: Build Latex"
+            ],
+            "dependsOrder": "sequence",
             "problemMatcher": []
         }
     ]
