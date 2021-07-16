@@ -7,7 +7,7 @@
 \usetikzlibrary{calc}
 
 \begin{document}
-\definecolor{limegreen}{rgb}{0.2, 0.8, 0.2}
+\definecolor{limegreen}{rgb}{0.568,0.933,0.565}
 \newcommand{\tikzAngleOfLine}{\tikz@AngleOfLine}
     \def\tikz@AngleOfLine(#1)(#2)#3{%
     \pgfmathanglebetweenpoints{%
@@ -29,7 +29,7 @@
     \fill[limegreen] (0,0) rectangle (10,5);
     \fill[red] (\ballax, \ballay) circle (1);
     \fill[white] (\ballbx, \ballby) circle (1);
-    \draw [->, line width=2pt] (\ballbx, \ballby) -- (\vecx, \vecy);
+    \draw [->, line width=2pt] (\ballbx, \ballby) -- (\vecx, \vecy) node[above] {$v$};
     \draw [dotted, line width=2pt] (\ballax, \ballay) -- node[below] {$d$} (\dashx, \dashy);
     \draw [dotted, line width=2pt] (\ballbx, \ballby) -- node[below] {$e$} (\dashx, \dashy);
     \draw [dotted, line width=2pt] (\ballax, \ballay) -- node[below] {$h$} (\ballbx, \ballby);

@@ -28,7 +28,8 @@ grid on;
 hold on;
 axis equal;
 axis off;
-patch([ 0, 0,88,88],[ 0,44,44, 0], 'g','FaceAlpha',0.5); 
+patch([ 0, 0, PoolBall.table_length, PoolBall.table_length], ...
+      [ 0,PoolBall.table_width,PoolBall.table_width, 0], 'g','FaceAlpha',0.5); 
 axis([0 PoolBall.table_length 0 PoolBall.table_width]);
 
 % Create array of Pool Balls with given properties and locations
