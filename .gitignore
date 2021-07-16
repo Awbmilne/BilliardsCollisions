@@ -1,3 +1,15 @@
 out/*
 
 !/**/.gitkeep
+resources/tikz/out/latex/part_1_diagram_expanded.aux
+resources/tikz/out/latex/part_1_diagram_expanded.fdb_latexmk
+resources/tikz/out/latex/part_1_diagram_expanded.fls
+resources/tikz/out/latex/part_1_diagram_expanded.log
+resources/tikz/out/latex/part_1_diagram_expanded.pdf
+resources/tikz/out/latex/part_1_diagram_expanded.synctex.gz
+resources/tikz/out/latex/part_1_diagram.aux
+resources/tikz/out/latex/part_1_diagram.fdb_latexmk
+resources/tikz/out/latex/part_1_diagram.fls
+resources/tikz/out/latex/part_1_diagram.log
+resources/tikz/out/latex/part_1_diagram.pdf
+resources/tikz/out/latex/part_1_diagram.synctex.gz

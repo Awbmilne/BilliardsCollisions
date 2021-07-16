@@ -39,10 +39,128 @@
 % Report 
 % \end{abstract}
 
-\section{Problem 1}
-\subsection{Show Transformation}
-Since we got equation 1 back, equation 2 is just equation 1 with $z$ substituted in. I 
-want to then reference Table \ref{start_pos} as an example.
+\section{Part 1 - Collision of 2 Balls}
+\subsection{Given Information}
+The problem is given to solve for the final velocities of 2 balls with arbitrary mass and initial velocity
+after colliding at a certain offset distance. Figure \ref{P1_diag} shows the setup of the 2 balls for the collision.
+
+\begin{figure}[H]
+    \centering
+    \includestandalone[width=10cm]{resources/tikz/part_1_diagram}
+    \captionof{figure}{Part 1 Setup}\label{P1_diag}
+\end{figure}
+
+\subsection{Physics of The Collision}
+
+Since it can be assume that there are no external forces during the collision, The problem becomes a 
+straightforward conservation of momentum problem. The velocites can be split for each ball into the direction
+normal and tangent to the collision. Each part can be solved seperately. First, create a system of equations
+for the normal velocites before and after the impact. Equations \ref{eqn:pt1_momentum} and \ref{eqn:pt1_restitution} show the 
+equations for conservation of momentum and for impact restitution, respectively.
+
+\begin{equation}
+    \label{eqn:pt1_momentum}
+    v_a m_a + v_b m_b = v_a' m_a + v_b' m_b
+\end{equation}
+
+\begin{equation}
+    \label{eqn:pt1_restitution}
+    e_{\text{rest.}} = \frac{v_a' - v_b'}{v_b - v_a}
+\end{equation}
+
+Solving this system of equations gives the normal velocities of the 2 balls after the collision, $v_a'$ and $v_b'$. For tangent
+velocities, due to friction, energy loses need to be accounted for in the collision. Since the change in momentum
+in the normal direction is the intergal of the force over the impact time, the change in tangent velocity can be
+derived from the change in normal momentum. Equation \ref{eqn:tangent_fric} shows the derivation for a balls tangent
+velocity after impact.
+
+\begin{equation}
+    \label{eqn:tangent_fric}
+    \begin{aligned}
+        mv + \int_{t_1}^{t_2} Fdt &= mv' \\
+        mv_t + \int_{t_1}^{t_2} F_f dt &= mv_t' \\
+        mv_t + \mu\left(mv_n' - mv_n\right) &= mv_t' \ \Leftarrow \text{Using $F_f = \mu_k F_n$}\\
+        v_t + \mu\left(v_n' - v_n\right) &= v_t'
+    \end{aligned}
+\end{equation}
+
+\subsection{Application of Physics}
+In order to apply the equations above, the normal and tangent velocities of the balls need to be determined. Basic
+trigonometery can be used to determine the relative velocities. In this case, it is difficult to determine the 
+normal and tangent values from the velocity vector and the $e$ value alone. To make it easier, Figure 
+\ref{P1_diag_exp} shows construction lines added for easier computation.
+
+\begin{figure}[H]
+    \centering
+    \includestandalone[width=10cm]{resources/tikz/part_1_diagram_expanded}
+    \captionof{figure}{Part 1 Construction Lines}\label{P1_diag_exp}
+\end{figure}
+
+Using the construction lines above, the below equations can be derived for the tangent and normal velocities of the
+moving ball. Equation \ref{eqn:part_1_thetas} shows the derivation of the impact angle and relative angles for vector rotation.
+
+\begin{equation}
+    \label{eqn:part_1_thetas}
+    \begin{gathered}
+        h = 2r \\
+        \theta = \sin^{-1} \left(\frac{e}{h}\right) = \sin^{-1} \left(\frac{e}{2r}\right)\\
+        \theta_\text{velocity} = \tan^{-1}\left(\frac{v_x}{v_y}\right)\\
+        \theta_\text{impact} = \theta_\text{velocity} - \theta =  \tan^{-1}\left(\frac{v_x}{v_y}\right) - \sin^{-1} \left(\frac{e}{2r}\right)\\
+    \end{gathered}
+\end{equation}
+
+Equation \ref{eqn:part_1_impact_v} shows the derivation for the normal and tangent velocities relative to the collision by
+way of matrix-based vector rotation.
+
+\begin{equation}
+    \label{eqn:part_1_impact_v}
+    \begin{gathered}
+        \phi = \theta_\text{impact} - \theta_\text{velocity}\\
+        R = 
+        \left[
+        \begin{matrix}
+            \cos(\phi) & -\sin{\phi}\\
+            \sin(\phi) & \cos(\phi)\\
+        \end{matrix}
+        \right]\\
+        v_{a_\text{norm,tang}} = R \times v_a
+    \end{gathered}
+\end{equation}
+
+Having the normal and tangent velocities for the collision, the below set Equation set \ref{eqn:part_1_together} can be applied to get the
+final normal and tangent velocities for the both ball A (red) and ball b (white).
+
+\begin{equation}
+    \label{eqn:part_1_together}
+    \begin{gathered}
+        v_{a_n} m_a + v_{b_n} m_b = v_{a_n}' m_a + v_{b_n}' m_b\\
+        e_\text{rest.} = \frac{v_{a_n}' - v_{b_n}'}{v_{b_n} - v_{a_b}}\\
+        v_{a_t}' = v_{a_t} + \mu \left(v_{a_n}' - v_{a_n}\right)\\
+        v_{b_t}' = v_{b_t} + \mu \left(v_{b_n}' - v_{b_n}\right)
+    \end{gathered}
+\end{equation}
+
+Finally, to get the final velocities of the 2 balls in the $x$ $y$ reference plane, another vector rotation
+needs to be done to revert to the $xy$ coordinate system. Equation \ref{eqn:part_1_rotate_back} shows this vector rotation.
+
+\begin{equation}
+    \label{eqn:part_1_rotate_back}
+    \begin{gathered}
+        \phi = \theta_\text{velocity} - \theta_\text{impact}\\
+        R = 
+        \left[
+        \begin{matrix}
+            \cos(\phi) & -\sin{\phi}\\
+            \sin(\phi) & \cos(\phi)\\
+        \end{matrix}
+        \right]\\
+        v_a = R \times v_{a_\text{norm,tang}} \\
+        v_b = R \times v_{b_\text{norm,tang}}
+    \end{gathered}
+\end{equation}
+
+\pagebreak
+\section{Appendix}
 
 \centering{
     \captionof{table}{Starting Positions}\label{start_pos}
@@ -53,33 +171,29 @@ want to then reference Table \ref{start_pos} as an example.
     \end{tabular}
 }
 
-\begin{table}
+\begin{table}[H]
     \centering
     \captionof{table}{Simulation Snapshots}\label{sim_snaps}
     \begin{tabu}to \textwidth {X[c]X[c]}
-      \includegraphics[width=75mm]{out/matlab/images/Simulation_1_start.png}\captionof{figure}{Simulation 1 Start}
-     &\includegraphics[width=75mm]{out/matlab/images/Simulation_1_end.png}\captionof{figure}{Simulation 1 End} \\
-      \includegraphics[width=75mm]{out/matlab/images/Simulation_2_start.png}\captionof{figure}{Simulation 2 Start}
-     &\includegraphics[width=75mm]{out/matlab/images/Simulation_2_end.png}\captionof{figure}{Simulation 2 End} \\
-      \includegraphics[width=75mm]{out/matlab/images/Simulation_3_start.png}\captionof{figure}{Simulation 3 Start}
-     &\includegraphics[width=75mm]{out/matlab/images/Simulation_3_end.png}\captionof{figure}{Simulation 3 End} \\
-      \includegraphics[width=75mm]{out/matlab/images/Simulation_4_start.png}\captionof{figure}{Simulation 4 Start}
-     &\includegraphics[width=75mm]{out/matlab/images/Simulation_4_end.png}\captionof{figure}{Simulation 4 End} \\
+        \includegraphics[width=75mm]{out/matlab/images/Simulation_1_start.png}\captionof{figure}{Simulation 1 Start}
+        &\includegraphics[width=75mm]{out/matlab/images/Simulation_1_end.png}\captionof{figure}{Simulation 1 End} \\
+        \includegraphics[width=75mm]{out/matlab/images/Simulation_2_start.png}\captionof{figure}{Simulation 2 Start}
+        &\includegraphics[width=75mm]{out/matlab/images/Simulation_2_end.png}\captionof{figure}{Simulation 2 End} \\
+        \includegraphics[width=75mm]{out/matlab/images/Simulation_3_start.png}\captionof{figure}{Simulation 3 Start}
+        &\includegraphics[width=75mm]{out/matlab/images/Simulation_3_end.png}\captionof{figure}{Simulation 3 End} \\
+        \includegraphics[width=75mm]{out/matlab/images/Simulation_4_start.png}\captionof{figure}{Simulation 4 Start}
+        &\includegraphics[width=75mm]{out/matlab/images/Simulation_4_end.png}\captionof{figure}{Simulation 4 End} \\
     \end{tabu}
 \end{table}
-
-
 \pagebreak
 \lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log ]{./out/matlab/output.log}
-
 \pagebreak
 \lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script | BilliardsCode.m ]{./BilliardsCode.m}
-
 \pagebreak
 \lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class Definition | PoolBall.m ]{./PoolBall.m}
 
 
-% \bibliographystyle{abbrv}
-% \bibliography{main}
+\bibliographystyle{abbrv}
+\bibliography{main}
 
 \end{document}

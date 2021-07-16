@@ -123,33 +123,40 @@ classdef PoolBall < handle
                 ball_a_v_angle = atan2(ball_a.vel(2), ball_a.vel(1)); % Angle of velocity of A
                 ball_b_v = norm(ball_b.vel); % Absolute velocity of B
                 ball_b_v_angle = atan2(ball_b.vel(2), ball_b.vel(1)); % Angle of velocity of B
-                ball_a_norm_v = cos(ball_a_v_angle - impact_angle) * ball_a_v; % norm portion of A velocity (compared to impact direction)
-                ball_a_tan_v = sin(ball_a_v_angle - impact_angle) * ball_a_v;  % tan portion of A velocity (compared to impact direction)
-                ball_b_norm_v = cos(ball_b_v_angle - impact_angle) * ball_b_v; % norm portion of B velocity (compared to impact direction)
-                ball_b_tan_v = sin(ball_b_v_angle - impact_angle) * ball_b_v;  % tan portion of B velocity (compared to impact direction)
+                ball_a_vr = [sin(ball_a_v_angle - impact_angle), cos(ball_a_v_angle - impact_angle)] * ball_a_v; % Relative velocity of A for impact [norm, tang]
+                ball_b_vr = [sin(ball_b_v_angle - impact_angle), cos(ball_b_v_angle - impact_angle)] * ball_b_v; % Relative velocity of B for impact [norm, tang]
                 % Create system of equations for the normal velocities, and solve
+                syms unknown_a unknown_b
+                eq_a = unknown_a + 12 == unknown_b
+                eq_b = unknown_a == 2 * unknown_b
+                [A,B] = equationsToMatrix([eq_a, eq_b], [unknown_a, unknown_b]);
+                soln = linsolve(A,B);
+                value_a = double(soln(1)); % To remove symbolic math part
+                value_b = double(soln(2)); % To remove symbolic math part
+
                 syms new_ball_a_norm_v new_ball_b_norm_v
-                norm_momentum = ball_a_norm_v * ball_a.mass + ball_b_norm_v * ball_b.mass == new_ball_a_norm_v * ball_a.mass + new_ball_b_norm_v * ball_b.mass;
-                norm_restitution = e == (new_ball_a_norm_v - new_ball_b_norm_v)/(ball_b_norm_v - ball_a_norm_v);
+                norm_momentum = ball_a_vr(2) * ball_a.mass + ball_b_vr(2) * ball_b.mass == new_ball_a_norm_v * ball_a.mass + new_ball_b_norm_v * ball_b.mass;
+                norm_restitution = e == (new_ball_a_norm_v - new_ball_b_norm_v)/(ball_b_vr(2) - ball_a_vr(2));
                 [A,B] = equationsToMatrix([norm_momentum, norm_restitution], [new_ball_a_norm_v, new_ball_b_norm_v]);
                 X = linsolve(A,B); % Solve system
-                new_ball_a_norm_v = X(1); % Post-impact normal velocity of A
-                new_ball_b_norm_v = X(2); % Post-impact normal velocity of B
+                    new_ball_a_norm_v = X(1); % Post-impact normal velocity of A
+                    new_ball_b_norm_v = X(2); % Post-impact normal velocity of B
                 % Determine frictional losses on tangent velocities
-                new_ball_a_tan_v = ball_a_tan_v - sign(ball_a_tan_v)*(PoolBall.mu_bb * (ball_a_norm_v - new_ball_a_norm_v));
-                new_ball_b_tan_v = ball_b_tan_v - sign(ball_b_tan_v)*(PoolBall.mu_bb * (ball_b_norm_v - new_ball_b_norm_v));
+                new_ball_a_vr = [double(X(1)), ball_a_vr(1) - sign(ball_a_vr(1)-ball_b_vr(1))*(PoolBall.mu_bb * (ball_a_vr(2) - double(X(1))))];
+                new_ball_b_vr = [double(X(2)), ball_b_vr(1) - sign(ball_b_vr(1)-ball_a_vr(1))*(PoolBall.mu_bb * (ball_b_vr(2) - double(X(2))))];
                 % Ensure frictional loss didnt change sign of velocity
-                if (sign(new_ball_a_tan_v) ~= sign(ball_a_tan_v))
-                    new_ball_a_tan_v = 0;
+                if (sign(new_ball_a_vr(1)) ~= sign(ball_a_vr(1)) && sign(ball_a_vr(1)) ~= 0)
+                    new_ball_a_vr(1) = 0;
                 end
-                if (sign(new_ball_b_tan_v) ~= sign(ball_b_tan_v))
-                    new_ball_b_tan_v = 0;
+                if (sign(new_ball_b_vr(1)) ~= sign(ball_b_vr(1)) && sign(ball_b_vr(1)) ~= 0)
+                    new_ball_b_vr(1) = 0;
                 end
+                % Create Rotation Matrix
+                rot_mat = [ cos(-impact_angle), -sin(-impact_angle);
+                            sin(-impact_angle),  cos(-impact_angle);];
                 % Apply new velocities to balls
-                ball_a.vel = [double(cos(impact_angle)*new_ball_a_norm_v - cos(pi/2 - impact_angle)*new_ball_a_tan_v), ...
-                              double(sin(impact_angle)*new_ball_a_norm_v + sin(pi/2 - impact_angle)*new_ball_a_tan_v)];
-                ball_b.vel = [double(cos(impact_angle)*new_ball_b_norm_v - cos(pi/2 - impact_angle)*new_ball_b_tan_v), ...
-                              double(sin(impact_angle)*new_ball_b_norm_v + sin(pi/2 - impact_angle)*new_ball_b_tan_v)];
+                ball_a.vel = new_ball_a_vr * rot_mat;
+                ball_b.vel = new_ball_b_vr * rot_mat;
                 return;
             % If this ball isnt overlapping, Check if we were previously colliding with it
             elseif (~isempty(ball_a.colliding_balls)) % Make sure array isnt empty
@@ -183,7 +190,7 @@ classdef PoolBall < handle
             obj.vel = vel;
         end
         %% PoolBall Find Closest
-        % Determine the closest ball from a given list of ball (Returns ball reference)
+        % Determine the closest ball from a given list of balls (Returns ball reference)
         function closest = find_nearest(obj, balls)
             closest = PoolBall.empty; % Empty reference
             min_dist = norm([PoolBall.table_length, PoolBall.table_width]); % Set to max value

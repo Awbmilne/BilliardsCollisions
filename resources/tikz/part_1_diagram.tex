@@ -1,0 +1,37 @@
+
+
+\documentclass{standalone}
+\usepackage{tikz}
+
+\usetikzlibrary{math}
+\usetikzlibrary{calc}
+
+\begin{document}
+\definecolor{limegreen}{rgb}{0.2, 0.8, 0.2}
+\newcommand{\tikzAngleOfLine}{\tikz@AngleOfLine}
+    \def\tikz@AngleOfLine(#1)(#2)#3{%
+    \pgfmathanglebetweenpoints{%
+        \pgfpointanchor{#1}{center}}{%
+        \pgfpointanchor{#2}{center}}
+    \pgfmathsetmacro{#3}{\pgfmathresult}%
+}
+\tikzmath{
+    \ballax = 4.134;
+    \ballay = 3.000; 
+    \ballbx = 5.866;
+    \ballby = 2.000;
+    \vecx = \ballbx - cos(60) * 1.5;
+    \vecy = \ballby + sin(60) * 1.5;
+    \dashx = \ballax + cos(60) * 1.75;
+    \dashy = \ballay - sin(60) * 1.75;
+}
+\begin{tikzpicture}
+    \fill[limegreen] (0,0) rectangle (10,5);
+    \fill[red] (\ballax, \ballay) circle (1);
+    \fill[white] (\ballbx, \ballby) circle (1);
+    \draw [->, line width=2pt] (\ballbx, \ballby) -- (\vecx, \vecy);
+    \draw [dotted, line width=2pt] (\ballax, \ballay) -- (\dashx, \dashy);
+    \draw [dotted, line width=2pt] (\ballbx, \ballby) -- node[below] {$e$} (\dashx, \dashy);
+\end{tikzpicture}
+
+\end{document}
