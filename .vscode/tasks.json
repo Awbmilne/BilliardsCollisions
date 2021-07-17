@@ -41,7 +41,7 @@
             "command": "ffmpeg",
             "args": [
                 "-i",
-                "out/matlab/videos/elasticCollision.avi",
+                "out/matlab/videos/combinedCollisions.avi",
                 "-vf",
                 "'fps=30,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse'",
                 "-loop", "0",
