@@ -23,7 +23,7 @@
 \maketitle
 \vfill
 \begin{abstract}
-    Project report for ME 212 in Spring 2021. Using MatLab to simulation collisions of pool balls accounting for friction and restitution.
+    Project report for ME 212 in Spring 2021. Using MatLab to simulation collisions of pool balls accounting for friction and restitution. Collision videos available \underline{\href{https://uofwaterloo-my.sharepoint.com/:f:/g/personal/awbmilne_uwaterloo_ca/EiWN90NLaUVGpE0EcLgVf8wBgqZj-v4eaprjO5gxFSzF4A?e=SygQLX}{Here}}.
 \end{abstract}
 \newpage
 
@@ -155,7 +155,7 @@ The problem is given to simulate the motion of a set of 11 balls in a square enc
 
 \subsection{Indentifying Collisions and Physics}
 
-In order to simulate the motion of the balls, the different motion states of the balls need to be identified. For balls on a table with bumpers, as outlined in section \ref{Pt2_Given}, there are 3 primary motions: movement for a balls velocity, impact of ball into a wall, impact of a ball into another ball. Each of these types of motion can be modelled seperately. The strategy used to handle time scales and determine collisions of balls was to calculate the positions of all the balls after very small time changes. After each time "chunk", each ball is checked for positional overlap with walls and all the other balls on the table. If a ball is overlapping with a wall or another ball, the change in velocity is calculated for the collision. A couple assumptions are made in order to model the system this way. The first assumption is that collisions are instantaneous, and therefore do not have a time range of occurance. This leads to the post-collision velocities being applied instantaneously after balls are determined to be impacting a ball or wall. The second assumption is that the accuracy of using very small time chunks is sufficient enough for the purposes of this simulation. This assumption is substantiated by the calculations in Equation \ref{eqn:part_2_accuracy} which shows that, in the worst case of a glancing shot with maximum time error, the anglular inaccuracy of a collision calculation is equal to roughly 1 millimeter radial displacment over a 2 meter distance.
+In order to simulate the motion of the balls, the different motion states of the balls need to be identified. For balls on a table with bumpers, as outlined in section \ref{Pt2_Given}, there are 3 primary motions: movement for a balls velocity, impact of ball into a wall, and impact of a ball into another ball. Each of these types of motion can be modelled seperately. The strategy used to handle time scales and determine collisions of balls was to calculate the positions of all the balls after very small time changes. After each time interval, each ball is checked for positional overlap with walls and all the other balls on the table. If a ball is overlapping with a wall or another ball, the change in velocity is calculated for the collision. A couple assumptions are made in order to model the system this way. The first assumption is that collisions are instantaneous, and therefore do not have a time range of occurance. This leads to the post-collision velocities being applied instantaneously after balls are determined to be impacting a ball or wall. The second assumption is that the accuracy of using very small time chunks is sufficient enough for the purposes of this simulation. This assumption is substantiated by the calculations in Equation \ref{eqn:part_2_accuracy} which shows that, in the worst case of a glancing shot with maximum time error, the anglular inaccuracy of a collision calculation is equal to roughly 1 millimeter radial displacment over a 2 meter distance.
 
 \begin{equation}
     \label{eqn:part_2_accuracy}
@@ -205,6 +205,26 @@ The final positions of all the balls are output to the log file, Listing \ref{ou
 \pagebreak
 \section{Appendix}
 
+{
+    The video files of the collisions, both combined video and individual collisions are available on the University of Waterloo OneDrive, \href{https://uofwaterloo-my.sharepoint.com/:f:/g/personal/awbmilne_uwaterloo_ca/EiWN90NLaUVGpE0EcLgVf8wBgqZj-v4eaprjO5gxFSzF4A?e=SygQLX}{\underline{Here}}.
+
+    \vspace{0.1cm}
+    
+    \begin{lstlisting}[
+                basicstyle=%
+                    \ttfamily                       % Use true type font
+                    \lst@ifdisplaystyle\scriptsize\fi, % Use scriptsize for Display-Style listings
+                language={},
+                frame={},
+                numbers=none,
+            ]
+    Full Link: https://uofwaterloo-my.sharepoint.com/:f:/g/personal/awbmilne_uwaterloo_ca/EiWN90NLaUVGpE0EcLgVf8wBgqZj-v4eaprjO5gxFSzF4A?e=SygQLX
+    \end{lstlisting}
+}
+
+
+\vspace{5cm}
+
 \centering{
     \captionof{table}{Starting Positions}\label{start_pos}
     \begin{tabular}{l|r|r}
@@ -214,6 +234,11 @@ The final positions of all the balls are output to the log file, Listing \ref{ou
     \end{tabular}
 }
 
+\pagebreak
+{
+    \lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log, label=output_log ]{./out/matlab/output.log}
+}
+\pagebreak
 \begin{table}[H]
     \centering
     \captionof{table}{Simulation Snapshots}\label{sim_snaps}
@@ -229,11 +254,13 @@ The final positions of all the balls are output to the log file, Listing \ref{ou
     \end{tabu}
 \end{table}
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log, label=output_log ]{./out/matlab/output.log}
+{
+    \lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script  | BilliardsCode.m, label=billiards_code ]{./BilliardsCode.m}
+}
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script  | BilliardsCode.m, label=billiards_code ]{./BilliardsCode.m}
-\pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class  Definition | PoolBall.m, label=poolball_code ]{./PoolBall.m}
+{
+    \lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class  Definition | PoolBall.m, label=poolball_code ]{./PoolBall.m}
+}
 
 
 % \bibliographystyle{abbrv}
