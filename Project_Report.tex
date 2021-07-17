@@ -16,15 +16,14 @@
     Alex Roman\\
     Austin W. Milne
 }
-\date{July 8, 2021}
+\date{July 17, 2021}
 
 
 \begin{document}
 \maketitle
 \vfill
 \begin{abstract}
-    Project report for ME 212 in Spring 2021. Using MatLab to simulation collisions of pool balls 
-    with friction and restitution.
+    Project report for ME 212 in Spring 2021. Using MatLab to simulation collisions of pool balls accounting for friction and restitution.
 \end{abstract}
 \newpage
 
@@ -41,8 +40,7 @@
 
 \section{Part 1 - Collision of 2 Balls}
 \subsection{Given Information}
-The problem is given to solve for the final velocities of 2 balls with arbitrary mass and initial velocity
-after colliding at a certain offset distance. Figure \ref{P1_diag} shows the setup of the 2 balls for the collision.
+The given problem is to solve for the final velocities of 2 balls with arbitrary mass and initial velocity after colliding at a certain offset distance. Figure \ref{P1_diag} shows the setup of the 2 balls for the collision.
 
 \begin{figure}[H]
     \centering
@@ -52,11 +50,7 @@ after colliding at a certain offset distance. Figure \ref{P1_diag} shows the set
 
 \subsection{Physics of The Collision}
 
-Since it can be assume that there are no external forces during the collision, The problem becomes a 
-straightforward conservation of momentum problem. The velocites can be split for each ball into the direction
-normal and tangent to the collision. Each part can be solved seperately. First, create a system of equations
-for the normal velocites before and after the impact. Equations \ref{eqn:pt1_momentum} and \ref{eqn:pt1_restitution} show the 
-equations for conservation of momentum and for impact restitution, respectively.
+Since it can be assumed that there are no external forces during the collision, the problem becomes a straightforward conservation of momentum problem. The velocites can be split for each ball into the direction normal and tangent to the collision. Each part can be solved seperately. First, create a system of equations for the normal velocites before and after the impact. Equations \ref{eqn:pt1_momentum} and \ref{eqn:pt1_restitution} show the equations for conservation of momentum and for impact restitution, respectively.
 
 \begin{equation}
     \label{eqn:pt1_momentum}
@@ -68,11 +62,7 @@ equations for conservation of momentum and for impact restitution, respectively.
     e_{\text{rest.}} = \frac{v_a' - v_b'}{v_b - v_a}
 \end{equation}
 
-Solving this system of equations gives the normal velocities of the 2 balls after the collision, $v_a'$ and $v_b'$. For tangent
-velocities, due to friction, energy loses need to be accounted for in the collision. Since the change in momentum
-in the normal direction is the intergal of the force over the impact time, the change in tangent velocity can be
-derived from the change in normal momentum. Equation \ref{eqn:tangent_fric} shows the derivation for a balls tangent
-velocity after impact.
+Solving this system of equations gives the normal velocities of the 2 balls after the collision, $v_a'$ and $v_b'$. For tangent velocities, due to friction, energy loses need to be accounted for in the collision. Since the change in momentum in the normal direction is the intergal of the force over the impact time, the change in tangent velocity can be derived from the change in normal momentum. Equation \ref{eqn:tangent_fric} shows the derivation for a balls tangent velocity after impact.
 
 \begin{equation}
     \label{eqn:tangent_fric}
@@ -85,10 +75,7 @@ velocity after impact.
 \end{equation}
 
 \subsection{Application of Physics}
-In order to apply the equations above, the normal and tangent velocities of the balls need to be determined. Basic
-trigonometery can be used to determine the relative velocities. In this case, it is difficult to determine the 
-normal and tangent values from the velocity vector and the $e$ value alone. To make it easier, Figure 
-\ref{P1_diag_exp} shows construction lines added for easier computation.
+In order to apply the equations above, the normal and tangent velocities of the balls need to be determined. Basic trigonometery can be used to determine the relative velocities. In this case, it is difficult to determine the normal and tangent values from the velocity vector and the $e$ value alone. To make it easier, Figure \ref{P1_diag_exp} shows construction lines added for easier computation.
 
 \begin{figure}[H]
     \centering
@@ -96,8 +83,7 @@ normal and tangent values from the velocity vector and the $e$ value alone. To m
     \captionof{figure}{Part 1 Construction Lines}\label{P1_diag_exp}
 \end{figure}
 
-Using the construction lines above, the below equations can be derived for the tangent and normal velocities of the
-moving ball. Equation \ref{eqn:part_1_thetas} shows the derivation of the impact angle and relative angles for vector rotation.
+Using the construction lines above, the below equations can be derived for the tangent and normal velocities of the moving ball. Equation \ref{eqn:part_1_thetas} shows the derivation of the impact angle and relative angles for vector rotation.
 
 \begin{equation}
     \label{eqn:part_1_thetas}
@@ -109,8 +95,7 @@ moving ball. Equation \ref{eqn:part_1_thetas} shows the derivation of the impact
     \end{gathered}
 \end{equation}
 
-Equation \ref{eqn:part_1_impact_v} shows the derivation for the normal and tangent velocities relative to the collision by
-way of matrix-based vector rotation.
+Equation \ref{eqn:part_1_impact_v} shows the derivation for the normal and tangent velocities relative to the collision by way of matrix-based vector rotation.
 
 \begin{equation}
     \label{eqn:part_1_impact_v}
@@ -127,8 +112,7 @@ way of matrix-based vector rotation.
     \end{gathered}
 \end{equation}
 
-Having the normal and tangent velocities for the collision, the below set Equation set \ref{eqn:part_1_together} can be applied to get the
-final normal and tangent velocities for the both ball A (red) and ball b (white).
+Having the normal and tangent velocities for the collision, the below set Equation set \ref{eqn:part_1_together} can be applied to get the final normal and tangent velocities for the both ball A (red) and ball b (white).
 
 \begin{equation}
     \label{eqn:part_1_together}
@@ -140,8 +124,7 @@ final normal and tangent velocities for the both ball A (red) and ball b (white)
     \end{gathered}
 \end{equation}
 
-Finally, to get the final velocities of the 2 balls in the $x$ $y$ reference plane, another vector rotation
-needs to be done to revert to the $xy$ coordinate system. Equation \ref{eqn:part_1_rotate_back} shows this vector rotation.
+Finally, to get the final velocities of the 2 balls in the $x$-$y$ reference plane, another vector rotation needs to be done to revert to the $xy$ coordinate system. Equation \ref{eqn:part_1_rotate_back} shows this vector rotation.
 
 \begin{equation}
     \label{eqn:part_1_rotate_back}
@@ -158,6 +141,66 @@ needs to be done to revert to the $xy$ coordinate system. Equation \ref{eqn:part
         v_b = R \times v_{b_\text{norm,tang}}
     \end{gathered}
 \end{equation}
+
+
+\section{Part 2 - Collisions of a Table of Balls}
+\subsection{Given Information}\label{Pt2_Given}
+The problem is given to simulate the motion of a set of 11 balls in a square enclosure, Similair to that of a billiards table. The initial position and velocity for each of the balls is provided, along with the mass and radius. Simplifications are made to assume that the system is effectively 2D without spin or rotation. Restitution coefficients for ball-on-ball and ball-on-wall are provided, as well as the frictional coefficient for ball-on-surface, ball-on-wall, and ball-on-ball. Figure \ref{P2_diag} is provided as an example for the visualization of the balls and table.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=12cm]{resources/Part_2_layout.png}
+    \captionof{figure}{Part 2 Table Layout}\label{P2_diag}
+\end{figure}
+
+\subsection{Indentifying Collisions and Physics}
+
+In order to simulate the motion of the balls, the different motion states of the balls need to be identified. For balls on a table with bumpers, as outlined in section \ref{Pt2_Given}, there are 3 primary motions: movement for a balls velocity, impact of ball into a wall, impact of a ball into another ball. Each of these types of motion can be modelled seperately. The strategy used to handle time scales and determine collisions of balls was to calculate the positions of all the balls after very small time changes. After each time "chunk", each ball is checked for positional overlap with walls and all the other balls on the table. If a ball is overlapping with a wall or another ball, the change in velocity is calculated for the collision. A couple assumptions are made in order to model the system this way. The first assumption is that collisions are instantaneous, and therefore do not have a time range of occurance. This leads to the post-collision velocities being applied instantaneously after balls are determined to be impacting a ball or wall. The second assumption is that the accuracy of using very small time chunks is sufficient enough for the purposes of this simulation. This assumption is substantiated by the calculations in Equation \ref{eqn:part_2_accuracy} which shows that, in the worst case of a glancing shot with maximum time error, the anglular inaccuracy of a collision calculation is equal to roughly 1 millimeter radial displacment over a 2 meter distance.
+
+\begin{equation}
+    \label{eqn:part_2_accuracy}
+    \begin{gathered}
+        \theta_\text{error}^\text{max} = \tan^{-1}\left( \frac{4 \left[\frac{m}{sec}\right] * 
+                                         39.3701 \left[\frac{in}{sec}/\frac{m}{sec}\right] *
+                                         \frac{1}{100000} \left[sec\right]}{2.25 \left[in\right]} =
+                                         0.040102^{\circ}\right)\\
+        \sin(\theta_\text{error}^\text{max}) * 2 \left[m\right] = 0.0013998 \left[m\right] = 1.3998 \left[mm\right]
+    \end{gathered}
+\end{equation}
+
+The equation for 2 balls colliding is already derived and shown in Equation \ref{eqn:part_1_impact_v}, \ref{eqn:part_1_together}, and \ref{eqn:part_1_rotate_back} above. Equation \ref{eqn:part_2_wall} below is the derivation for the velocities after a ball has impacted a wall.
+
+\begin{equation}
+    \label{eqn:part_2_wall}
+    \begin{gathered}
+        v_n' = - e_\text{rest.} v_n \\
+        v_t' = v_t - \mu \left(v_n' - v_n\right)
+    \end{gathered}
+\end{equation}
+
+The majority of the math is carried over from Equation \ref{eqn:part_1_together} with the velocity for the
+second ball being set to 0. Additionally, the movement for a ball with friction over the surface of the table
+can be modeled by Equation \ref{eqn:part_2_friction}, where the position, $s$, changes with the average
+velocity over the specified time chunk.
+
+\begin{equation}
+    \label{eqn:part_2_friction}
+    \begin{gathered}
+        v' = v + (\Delta t \ \mu \ g)\\
+        v_\text{avg} = \frac{v + v'}{2}\\
+        s' = s + \Delta t \ v_\text{avg}
+    \end{gathered}
+\end{equation}
+
+\subsection{Creating the Simulation Code}
+
+While converting the equations listed above for the motion of the balls on the table, many small changes were made in order to make the math more universal and less sensitive to angles and directions. For collision angle calculations in Equation \ref{eqn:part_1_thetas}, $tan^{-1}$ was replaced with \lstinline{atan2()} in Listing \ref{poolball_code}, lines \ref{atan2_1} and \ref{atan2_2} to make the angle quadrant-aware. For calculation of frictional losses, the direction of relative velocity needed to be accounted for to ensure that the friction was applied correctly. This led to using the \lstinline{sign()} function for checking the direction of relative motion in Listing \ref{poolball_code}, lines \ref{velocity_sign_1} and \ref{velocity_sign_2}. Also, in order to ensure the friction does not change the direction of a ball, but instead only slows it to a stop, the sign of the balls' tangent velocities had to be checked and corrected, as seen in Listing \ref{poolball_code}, on lines: \ref{friction_check_a}, \ref{friction_check_b}, \ref{friction_check_c}, \ref{friction_check_d}, and \ref{friction_check_e}.
+
+The code for the simulation was written in an object-oriented style, with the \lstinline{PoolBall} class, defined in Listing \ref{poolball_code}, containing all the physics and collision math for the motion of each ball. The main script, Listing \ref{billiards_code}, creates the set of balls and runs the physics functions repeatedly, storing the graphs as video frames and exporting the relevent information for the simulation.
+
+The fourth shot of the simulation, where the cue ball is to be hit at $1.5 \ m/s$ toward the nearest ball, is calculated at the start of the script. The subject ball and angle of cue shot are output as part of the log file in Listing \ref{output_log}, before the simulations are run.
+
+The final positions of all the balls are output to the log file, Listing \ref{output_log}, with accuracy down to 1/100th of an inch.
 
 \pagebreak
 \section{Appendix}
@@ -186,14 +229,14 @@ needs to be done to revert to the $xy$ coordinate system. Equation \ref{eqn:part
     \end{tabu}
 \end{table}
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log ]{./out/matlab/output.log}
+\lstinputlisting[ title=\texttt{\scriptsize output.log}, caption=Script Output | output.log, label=output_log ]{./out/matlab/output.log}
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script | BilliardsCode.m ]{./BilliardsCode.m}
+\lstinputlisting[ title=\texttt{\scriptsize BilliardsCode.m}, caption=MatLab Script  | BilliardsCode.m, label=billiards_code ]{./BilliardsCode.m}
 \pagebreak
-\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class Definition | PoolBall.m ]{./PoolBall.m}
+\lstinputlisting[ title=\texttt{\scriptsize PoolBall.m}, caption=PoolBall Class  Definition | PoolBall.m, label=poolball_code ]{./PoolBall.m}
 
 
-\bibliographystyle{abbrv}
-\bibliography{main}
+% \bibliographystyle{abbrv}
+% \bibliography{main}
 
 \end{document}

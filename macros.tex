@@ -26,14 +26,16 @@
 \definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0}
 \definecolor{backcolour}{rgb}{204,204,204}
 % Rename Listings
-\renewcommand{\lstlistingname}{Code} % Rename listing to code
-\renewcommand\lstlistlistingname{List of Code} % Rename list of listing to List of Code
+\renewcommand{\lstlistingname}{Listing} % Rename listing to code
+\renewcommand\lstlistlistingname{Listings of Code} % Rename list of listing to List of Code
 % For faster processing, load Matlab syntax for listings
 \lstloadlanguages{Matlab}%
 \lstset{language=Matlab,                        % Use MATLAB
         frame=tb,                               % Frame on Top and Bottom
         breaklines=true,                        % Allow breaking lines
-        basicstyle=\scriptsize\ttfamily,        % Use small true type font
+        basicstyle=%
+                \ttfamily                       % Use true type font
+                \lst@ifdisplaystyle\scriptsize\fi, % Use scriptsize for Display-Style listings
         keywordstyle=[1]\color{blue}\bfseries,  % MATLAB functions bold and blue
         keywordstyle=[2]\color{purple},         % MATLAB function arguments purple
         keywordstyle=[3]\color{blue}\underbar,  % User functions underlined and blue
@@ -58,5 +60,6 @@
         numbers=left,                           % Line numbers on left
         firstnumber=1,                          % Line numbers start with line 1
         numberstyle=\tiny\color{blue},          % Line numbers are blue
-        stepnumber=1                            % Line numbers go in steps of 5
+        stepnumber=1,                            % Line numbers go in steps of 5
+        escapeinside={(*@}{@*)}                 % Escape labeled comments
 }

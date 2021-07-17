@@ -1,7 +1,7 @@
 %% PoolBall class
 % Carries the properties and states of a ball on the table
 classdef PoolBall < handle
-    %% Shared Properties 
+    %% Shared Properties
     properties (Constant)
         table_length = convlength(88,'in','m');  % Length of pool table (x-direction)
         table_width =  convlength(44,'in','m'); % Width of pool table (y-direction)
@@ -55,10 +55,10 @@ classdef PoolBall < handle
         % Update the position and velocity of the pool ball based in the
         % velocity and surface friction
         function move(obj, time_slice)
-            vel_angle = atan2(obj.vel(2), obj.vel(1));
+            vel_angle = atan2(obj.vel(2), obj.vel(1)); %(*@\label{atan2_1}@*)
             old_vel = norm(obj.vel); % Get the normal of the old velocity
             new_vel = old_vel - (time_slice * PoolBall.mu_bs * PoolBall.gravity); % Loss of velocity from friction
-            if (new_vel < 0) % Check if the new velocity was reduced past 0
+            if (new_vel < 0) % Check if the new velocity was reduced past 0 (*@\label{friction_check_a}@*)
                 new_vel = 0;
             end
             effective_vel = [cos(vel_angle) * (old_vel + new_vel)/2, sin(vel_angle) * (old_vel + new_vel)/2]; % Use velocity of average between old and new for time section
@@ -76,7 +76,7 @@ classdef PoolBall < handle
                 obj.vel(1) = -(obj.vel(1)*PoolBall.e_bc); % Invert and reduce the perpendicular velocity by restitution factor
                 obj.pos(1) = min(max(obj.pos(1),obj.rad),max_x-obj.rad); % Put the ball back within the limits (Eliminate glitches)
                 obj.vel(2) = obj.vel(2) - sign(obj.vel(2))*(PoolBall.mu_bc * abs(obj.vel(1)-old_vel(1))); % Solve for frictional loss to parallel velocity
-                if (sign(obj.vel(2)) ~= sign(old_vel(2))) % Ensure we didnt reverse direction due to friction
+                if (sign(obj.vel(2)) ~= sign(old_vel(2))) % Ensure we didnt reverse direction due to friction (*@\label{friction_check_b}@*)
                     obj.vel(2) = 0;
                 end
             end
@@ -86,7 +86,7 @@ classdef PoolBall < handle
                 obj.vel(2) = -(obj.vel(2)*PoolBall.e_bc); % Invert and reduce the perpendicular velocity by restitution factor
                 obj.pos(2) = min(max(obj.pos(2),obj.rad),max_y-obj.rad); % Put the ball back within the limits (Eliminate glitches)
                 obj.vel(1) = obj.vel(1) - sign(obj.vel(1))*(PoolBall.mu_bc * abs(obj.vel(2)-old_vel(2))); % Solve for frictional loss to parallel velocity
-                if (sign(obj.vel(1)) ~= sign(old_vel(1))) % Ensure we didnt reverse direction due to friction
+                if (sign(obj.vel(1)) ~= sign(old_vel(1))) % Ensure we didnt reverse direction due to friction (*@\label{friction_check_c}@*)
                     obj.vel(1) = 0;
                 end
             end
@@ -118,7 +118,7 @@ classdef PoolBall < handle
                 end
                 % Get the angles and velocities, relative to the impact
                 difference = ball_b.pos - ball_a.pos;
-                impact_angle = atan2(difference(2), difference(1));
+                impact_angle = atan2(difference(2), difference(1)); %(*@\label{atan2_2}@*)
                 ball_a_vr = ball_a.vel * rotmat(impact_angle); % Velocity rotated to collision angle [norm, tang]
                 ball_b_vr = ball_b.vel * rotmat(impact_angle); % Velocity rotated to collision angle [norm, tang]
                 % Create system of equations for the normal velocities, and solve
@@ -128,13 +128,13 @@ classdef PoolBall < handle
                 [A,B] = equationsToMatrix([norm_momentum, norm_restitution], [new_ball_a_norm_v, new_ball_b_norm_v]);
                 X = linsolve(A,B); % Solve system
                 % Determine frictional losses on tangent velocities
-                new_ball_a_vr = [double(X(1)), ball_a_vr(2) - sign(ball_a_vr(2)-ball_b_vr(2))*(PoolBall.mu_bb * (ball_a_vr(1) - double(X(1))))];
-                new_ball_b_vr = [double(X(2)), ball_b_vr(2) - sign(ball_b_vr(2)-ball_a_vr(2))*(PoolBall.mu_bb * (ball_b_vr(1) - double(X(2))))];
+                new_ball_a_vr = [double(X(1)), ball_a_vr(2) - sign(ball_a_vr(2)-ball_b_vr(2))*(PoolBall.mu_bb * (ball_a_vr(1) - double(X(1))))]; %(*@\label{velocity_sign_1}@*)
+                new_ball_b_vr = [double(X(2)), ball_b_vr(2) - sign(ball_b_vr(2)-ball_a_vr(2))*(PoolBall.mu_bb * (ball_b_vr(1) - double(X(2))))]; %(*@\label{velocity_sign_2}@*)
                 % Ensure frictional loss didnt change sign of velocity
-                if (sign(new_ball_a_vr(2)) ~= sign(ball_a_vr(2)) && sign(ball_a_vr(2)) ~= 0 )
+                if (sign(new_ball_a_vr(2)) ~= sign(ball_a_vr(2)) && sign(ball_a_vr(2)) ~= 0 ) %(*@\label{friction_check_d}@*)
                     new_ball_a_vr(2) = 0;
                 end
-                if (sign(new_ball_b_vr(2)) ~= sign(ball_b_vr(2)) && sign(ball_b_vr(2)) ~= 0)
+                if (sign(new_ball_b_vr(2)) ~= sign(ball_b_vr(2)) && sign(ball_b_vr(2)) ~= 0) %(*@\label{friction_check_e}@*)
                     new_ball_b_vr(2) = 0;
                 end
                 % Apply new velocities to balls
@@ -188,6 +188,7 @@ classdef PoolBall < handle
     end 
 end
 
+% Rotation Matrix function for less verbose vector rotation math
 function R = rotmat(angle)
     R = [cos(angle), -sin(angle)
          sin(angle),  cos(angle)];
